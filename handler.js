@@ -52,7 +52,7 @@ const resize = (event, context, callback) => {
       }
       return callback(null, makeResponse(200, {
         id,
-        result: data.toString('base64'),
+        resized: data.toString('base64'),
       }));
     });
 };
