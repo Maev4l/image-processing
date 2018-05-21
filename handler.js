@@ -45,6 +45,7 @@ const resize = (event, context, callback) => {
   const buf = Buffer.from(image.trim(), 'base64');
 
   return sharp(buf).resize(width, height)
+    .max()
     .toFormat(format)
     .toBuffer((err, data) => {
       if (err) {
