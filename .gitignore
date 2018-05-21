@@ -59,3 +59,15 @@ typings/
 
 # next.js build output
 .next
+
+# Serverless directories
+.serverless
+
+# Coveralls
+coverage
+
+# Editor
+.vscode
+
+# Secrets
+cheatsheet.txt
