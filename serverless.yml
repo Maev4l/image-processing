@@ -1,5 +1,11 @@
 service: celsus-image-processing
 
+plugins:
+  - serverless-api-compression # Enable AWS API Gateway gzip compression
+
+custom:
+  contentCompression: 1024 # API Gateway gzip compression threshold (in bytes)
+
 provider:
   name: aws
   runtime: nodejs6.10
