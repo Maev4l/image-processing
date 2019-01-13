@@ -14,6 +14,19 @@ provider:
     minimumCompressionSize: 1024 # in bytes
   # <<< Enable Gzip compression on AWS APi Gateway
 
+plugins:
+  - serverless-domain-manager
+
+custom:
+  customDomain:
+    domainName: "api-celsus.isnan.eu"
+    certificateName: "*.isnan.eu"
+    hostedZoneId: ZWC66FN0XU6P9
+    basePath: "image-processing"
+    stage: ${self:provider.stage}
+    createRoute53Record: true
+    endpointType: regional
+
 package:
   exclude:
     - .env
