@@ -3,7 +3,6 @@ const Joi = require('joi');
 
 /* eslint-disable newline-per-chained-call */
 const resizeSchema = Joi.object().keys({
-  id: Joi.string().required(),
   width: Joi.number().positive().max(1024).integer().required(),
   height: Joi.number().positive().max(1024).integer().required(),
   image: Joi.string().base64().required(),
