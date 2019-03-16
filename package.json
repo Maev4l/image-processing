@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "joi": "^13.3.0",
+    "request": "^2.88.0",
     "sharp": "^0.20.2"
   }
 }
