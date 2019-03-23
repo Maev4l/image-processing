@@ -2,7 +2,7 @@ service: celsus-image-processing
 
 provider:
   name: aws
-  runtime: nodejs6.10
+  runtime: nodejs8.10
   versionFunctions: false
   memorySize: 1024
   region: eu-west-2
