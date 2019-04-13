@@ -1,31 +1,32 @@
 service: celsus-image-processing
 
+plugins:
+  - serverless-domain-manager
+
+custom:
+  config: ${file(./infra.json)}
+  customDomain:
+    domainName: "api-celsus.isnan.eu"
+    certificateArn: ${self:custom.config.certificate}
+    hostedZoneId: ${self:custom.config.hostedZone}
+    basePath: "image-processing"
+    stage: ${self:provider.stage}
+    createRoute53Record: true
+    endpointType: edge
+
 provider:
   name: aws
   runtime: nodejs8.10
   versionFunctions: false
   memorySize: 1024
-  region: eu-west-2
-  stage: dev
-  endpointType: REGIONAL
+  region: ${self:custom.config.region}
+  stage: ${self:custom.config.environment}
+  endpointType: EDGE
   profile: serverless-admin-profile
   # >>> Enable Gzip compression on AWS APi Gateway
   apiGateway:
     minimumCompressionSize: 1024 # in bytes
   # <<< Enable Gzip compression on AWS APi Gateway
-
-plugins:
-  - serverless-domain-manager
-
-custom:
-  customDomain:
-    domainName: "api-celsus.isnan.eu"
-    certificateName: "*.isnan.eu"
-    hostedZoneId: ZWC66FN0XU6P9
-    basePath: "image-processing"
-    stage: ${self:provider.stage}
-    createRoute53Record: true
-    endpointType: regional
 
 package:
   exclude:
@@ -46,4 +47,4 @@ functions:
           method: post
           cors: true
           authorizer:
-            arn: arn:aws:cognito-idp:eu-west-2:671123374425:userpool/eu-west-2_ocAf57dZ3
+            arn: ${self:custom.config.userPoolArn}

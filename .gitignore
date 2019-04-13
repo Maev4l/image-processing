@@ -71,3 +71,6 @@ coverage
 
 # Secrets
 cheatsheet.txt
+
+# Terraform infra
+infra.json
