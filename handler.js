@@ -1,5 +1,5 @@
 const sharp = require("sharp");
-const Joi = require("@hapi/joi");
+const Joi = require("joi");
 const httpclient = require("request");
 
 /* eslint-disable newline-per-chained-call */
