@@ -1,6 +1,6 @@
-const sharp = require("sharp");
-const Joi = require("joi");
-const httpclient = require("request");
+const sharp = require('sharp');
+const Joi = require('joi');
+const superagent = require('superagent');
 
 /* eslint-disable newline-per-chained-call */
 const resizeSchema = Joi.object()
@@ -9,68 +9,58 @@ const resizeSchema = Joi.object()
     height: Joi.number().positive().max(1024).integer().required(),
     image: Joi.string().base64(),
     imageUrl: Joi.string().uri(),
-    format: Joi.string().allow("png").required(),
+    format: Joi.string().allow('png').required(),
   })
-  .nand(["image", "imageUrl"]);
+  .nand('image', 'imageUrl');
 
-const makeResponse = (statusCode, result) => {
-  let body = "";
-  if (result) {
-    body = JSON.stringify(result);
+const transformImage = async (buffer, width, height, format) => {
+  try {
+    const data = await sharp(buffer)
+      .resize(width, height, { fit: 'inside', withoutEnlargement: true })
+      .toFormat(format)
+      .toBuffer();
+    return {
+      resizedImage: data.toString('base64'),
+    };
+  } catch (e) {
+    return {
+      error: e.message,
+    };
   }
-  const response = {
-    statusCode,
-    headers: {
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Credentials": true,
-    },
-    body,
-  };
-
-  return response;
 };
 
-const transformImage = (buffer, width, height, format, callback) =>
-  sharp(buffer)
-    .resize(width, height)
-    .max()
-    .toFormat(format)
-    .toBuffer((err, data) => {
-      if (err) {
-        return callback(null, makeResponse(500, { message: err.message }));
-      }
-      return callback(
-        null,
-        makeResponse(200, { resized: data.toString("base64") })
-      );
-    });
+// eslint-disable-next-line import/prefer-default-export
+const resize = async (event) => {
+  const { payload } = event;
 
-const resize = (event, context, callback) => {
-  const request = JSON.parse(event.body);
-
-  const validationResult = Joi.validate(request, resizeSchema);
+  const validationResult = resizeSchema.validate(payload);
   const { error } = validationResult;
   if (error) {
     const { message } = error.details[0];
-    return callback(null, makeResponse(500, { message }));
+    return {
+      error: message,
+    };
   }
 
-  const { width, height, format, image, imageUrl } = request;
+  const { width, height, format, image, imageUrl } = payload;
 
+  let buf;
   if (imageUrl) {
-    return httpclient(
-      { uri: imageUrl, method: "GET", encoding: null },
-      (err, resp, buffer) => {
-        if (err) {
-          return callback(null, makeResponse(500, { message: err.message }));
-        }
-        return transformImage(buffer, width, height, format, callback);
-      }
-    );
+    try {
+      const response = await superagent.get(imageUrl).buffer(true);
+      const { body } = response;
+      buf = body;
+    } catch (e) {
+      return {
+        error: e.message,
+      };
+    }
+  } else if (image) {
+    buf = Buffer.from(image.trim(), 'base64');
   }
 
-  const buf = Buffer.from(image.trim(), "base64");
-  return transformImage(buf, width, height, format, callback);
+  const result = await transformImage(buf, width, height, format);
+  return result;
 };
 
 exports.resize = resize;
