@@ -74,3 +74,5 @@ cheatsheet.txt
 
 # Terraform infra
 infra.json
+
+.DS_Store
