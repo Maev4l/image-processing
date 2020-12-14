@@ -12,6 +12,17 @@ provider:
   stage: ${self:custom.config.environment}
   profile: serverless-admin-profile
   timeout: 30
+  tags:
+    application: 'celsus'
+    owner: 'serverless'
+  stackTags:
+    application: 'celsus'
+    owner: 'serverless'
+  deploymentBucket:
+    blockPublicAccess: true
+    tags:
+      application: 'celsus'
+      owner: 'serverless'
 
 package:
   exclude:
