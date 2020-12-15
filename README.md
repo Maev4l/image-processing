@@ -16,7 +16,7 @@ docker run -v "$PWD":/var/task lambci/lambda:build-nodejs12.x npm install --save
 - use npm instead of yarn
 - do not use webpack, as sharp is not bundled
 
-## Package as custime image
+## Package as custom image
 
 ### Connect to Docker registry
 
