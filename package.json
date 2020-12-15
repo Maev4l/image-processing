@@ -15,7 +15,7 @@
     "eslint-config-prettier": "6.11.0",
     "eslint-plugin-import": "2.22.0",
     "prettier": "2.1.1",
-    "serverless": "1.80.0"
+    "serverless": "^2.15.0"
   },
   "dependencies": {
     "joi": "17.2.1",
