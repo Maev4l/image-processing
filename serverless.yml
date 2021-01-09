@@ -36,4 +36,4 @@ package:
 functions:
   resize:
     name: resize-image
-    image: ${self:custom.config.imageResizeRepositoryUrl}@sha256:1aa06e5be68afbb3c50e76444b3dc13a278313ba86e70aa5ba07bdf8923f0a26
+    image: ${self:custom.config.imageResizeRepositoryUrl}:latest
