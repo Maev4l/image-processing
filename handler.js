@@ -1,6 +1,7 @@
 const sharp = require('sharp');
 const Joi = require('joi');
 const superagent = require('superagent');
+const winston = require('winston');
 
 /* eslint-disable newline-per-chained-call */
 const resizeSchema = Joi.object()
@@ -13,6 +14,23 @@ const resizeSchema = Joi.object()
   })
   .nand('image', 'imageUrl');
 
+const getLogger = (category) => {
+  const options = {
+    format: winston.format.combine(
+      winston.format.timestamp(),
+      winston.format.label({ label: category }),
+      winston.format.printf(({ level, message, label, timestamp }) => {
+        return `${timestamp} [${label}] ${level}: ${message}`;
+      }),
+    ),
+    transports: [new winston.transports.Console({ level: 'info' })],
+  };
+  const logger = winston.loggers.get(category, options);
+  return logger;
+};
+
+const logger = getLogger('img-processing');
+
 const transformImage = async (buffer, width, height, format) => {
   try {
     const data = await sharp(buffer)
@@ -23,6 +41,7 @@ const transformImage = async (buffer, width, height, format) => {
       resizedImage: data.toString('base64'),
     };
   } catch (e) {
+    logger.error(`Fail to transform image: ${e.message}`);
     return {
       error: e.message,
     };
@@ -37,6 +56,7 @@ const resize = async (event) => {
   const { error } = validationResult;
   if (error) {
     const { message } = error.details[0];
+    logger.error(`Fail to validate input: ${message}`);
     return {
       error: message,
     };
@@ -51,6 +71,7 @@ const resize = async (event) => {
       const { body } = response;
       buf = body;
     } catch (e) {
+      logger.error(`Fail to fetch image at ${imageUrl}: ${e.message}`);
       return {
         error: e.message,
       };
@@ -60,6 +81,11 @@ const resize = async (event) => {
   }
 
   const result = await transformImage(buf, width, height, format);
+  logger.info(
+    `Resize successful (width:${width} - height:${height} - format:${format} - source:${
+      imageUrl || 'encoded'
+    }): ${JSON.stringify(result)}`,
+  );
   return result;
 };
 

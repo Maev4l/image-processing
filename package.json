@@ -4,8 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "deploy:dev": "yarn download-infra:dev && npx sls deploy",
-    "download-infra:dev": "aws s3 cp s3://global-tf-states/common/infra.json infra.json"
+    "deploy:dev": "npx sls remove && npx sls deploy"
   },
   "author": "",
   "license": "ISC",
@@ -20,6 +19,7 @@
   "dependencies": {
     "joi": "17.2.1",
     "sharp": "0.26.0",
-    "superagent": "6.1.0"
+    "superagent": "6.1.0",
+    "winston": "3.3.3"
   }
 }
