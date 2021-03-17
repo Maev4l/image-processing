@@ -1,11 +1,11 @@
 {
-  "name": "celsus-image-processing",
+  "name": "image-processing",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "deploy:dev": "yarn download-infra:dev && npx sls deploy",
-    "download-infra:dev": "aws s3 cp s3://celsus-tf-state/celsus/dev/infra.json infra.json"
+    "download-infra:dev": "aws s3 cp s3://global-tf-states/common/infra.json infra.json"
   },
   "author": "",
   "license": "ISC",

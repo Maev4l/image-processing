@@ -1,4 +1,4 @@
-# celsus-image-processing
+# image-processing
 
 ## Regular deployment (deprrecated)
 
@@ -27,17 +27,17 @@ aws ecr get-login-password --region eu-central-1 | docker login --username AWS -
 ### Build image (locally)
 
 ```script
-docker build -t celsus-image-resize .
+docker build -t image-resize .
 ```
 
 ### Link image to private repository
 
 ```script
-docker tag celsus-image-resize:latest <aws_account_id>.dkr.ecr.eu-central-1.amazonaws.com/celsus-image-resize:latest
+docker tag image-resize:latest <aws_account_id>.dkr.ecr.eu-central-1.amazonaws.com/image-resize:latest
 ```
 
 ### Push image
 
 ```script
-docker push <aws_account_id>.dkr.ecr.eu-central-1.amazonaws.com/celsus-image-resize:latest
+docker push <aws_account_id>.dkr.ecr.eu-central-1.amazonaws.com/image-resize:latest
 ```

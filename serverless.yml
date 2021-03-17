@@ -1,4 +1,4 @@
-service: celsus-image-processing
+service: image-processing
 
 custom:
   config: ${file(./infra.json)}
@@ -8,20 +8,19 @@ provider:
   runtime: nodejs12.x
   versionFunctions: false
   memorySize: 1024
-  region: ${self:custom.config.region}
-  stage: ${self:custom.config.environment}
+  region: 'eu-central-1'
   profile: serverless-admin-profile
   timeout: 30
   tags:
-    application: 'celsus'
+    application: 'common'
     owner: 'serverless'
   stackTags:
-    application: 'celsus'
+    application: 'common'
     owner: 'serverless'
   deploymentBucket:
     blockPublicAccess: true
     tags:
-      application: 'celsus'
+      application: 'common'
       owner: 'serverless'
 
 package:
@@ -36,4 +35,4 @@ package:
 functions:
   resize:
     name: resize-image
-    image: ${self:custom.config.imageResizeRepositoryUrl}:latest
+    image: ${self:custom.config.imageResizeRepositoryUrl.value}:latest
